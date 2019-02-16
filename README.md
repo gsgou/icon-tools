@@ -9,12 +9,13 @@ Uses imagemagick (`convert`) (`mogrify`) to manipulate the image input.
 ```
 $ icon-helpers.sh colorize $FILE "rgb(255,0,0)"
 $ icon-helpers.sh colorize $FILE "#FF0000FF"
+$ icon-helpers.sh dominantcolor $FILE
 $ icon-helpers.sh resize $FILE 24
 $ icon-helpers.sh trim $FILE
 ```
 ## Dependencies
 
-The script uses `basename`, `convert` and `mogrify`.
+The script uses `grep`,`head`,`mkdir`,`mv`,`rm`,`sed`,`sort`,`convert` and `mogrify`.
 
 ##### apt-get
 ```
