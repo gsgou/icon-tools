@@ -1,4 +1,4 @@
-# icon-helpers
+# icon-tools
 
 Bash script to ***process icons*** for mobile-development use cases.
 
@@ -7,11 +7,11 @@ Uses imagemagick (`convert`) (`mogrify`) to manipulate the image input.
 ## Example Runs
 
 ```
-$ icon-helpers.sh colorize $FILE "rgb(255,0,0)"
-$ icon-helpers.sh colorize $FILE "#FF0000FF"
-$ icon-helpers.sh dominantcolor $FILE
-$ icon-helpers.sh resize $FILE 24
-$ icon-helpers.sh trim $FILE
+$ icon-tools.sh colorize $FILE "rgb(255,0,0)"
+$ icon-tools.sh colorize $FILE "#FF0000FF"
+$ icon-tools.sh dominantcolor $FILE
+$ icon-tools.sh resize $FILE 24
+$ icon-tools.sh trim $FILE
 ```
 ## Dependencies
 
