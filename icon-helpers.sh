@@ -6,12 +6,15 @@ colorize() {
 convert "$1" \
 -fill "$2" \
 -colorize 100% \
-"$3/$(basename $1)"
+"${1%.*}_${FUNCNAME[0]}.${1##*.}"
 }
 
 # https://www.smashingmagazine.com/2015/06/efficient-image-resizing-with-imagemagick/
 resize() {
-mogrify -path "$3" \
+TEMP_DIR="${1%/*}/${FUNCNAME[0]}"
+mkdir -p -m 755 "$TEMP_DIR"
+mogrify \
+-path "$TEMP_DIR" \
 -filter Triangle \
 -define filter:support=2 \
 -thumbnail "$2" \
@@ -26,13 +29,15 @@ mogrify -path "$3" \
 -interlace none \
 -colorspace sRGB \
 "$1"
+mv "$TEMP_DIR/${1##*/}" "${1%.*}_${FUNCNAME[0]}.${1##*.}"
+rm -rf "$TEMP_DIR"
 }
 
 trim() {
 convert "$1" \
 -trim \
 +repage \
-"$2/$(basename $1)"
+"${1%.*}_${FUNCNAME[0]}.${1##*.}"
 }
 
 # Check if the function exists

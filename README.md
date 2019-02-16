@@ -7,10 +7,10 @@ Uses imagemagick (`convert`) (`mogrify`) to manipulate the image input.
 ## Example Runs
 
 ```
-$ icon-helpers.sh colorize $SOURCE_FILE "rgb(255,0,0)" $DEST_FOLDER
-$ icon-helpers.sh colorize $SOURCE_FILE "#FF0000FF" $DEST_FOLDER
-$ icon-helpers.sh resize $SOURCE_FILE 24 $DEST_FOLDER
-$ icon-helpers.sh trim $SOURCE_FILE $DEST_FOLDER
+$ icon-helpers.sh colorize $FILE "rgb(255,0,0)"
+$ icon-helpers.sh colorize $FILE "#FF0000FF"
+$ icon-helpers.sh resize $FILE 24
+$ icon-helpers.sh trim $FILE
 ```
 ## Dependencies
 
