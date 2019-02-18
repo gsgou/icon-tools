@@ -9,6 +9,101 @@ convert "$1" \
 "${1%.*}_${FUNCNAME[0]}.${1##*.}"
 }
 
+# Tab-Icons 24dp/pt: https://material.io/design/components/tabs.html#spec
+createicons() (
+WIDTH="$(convert "$1" -format "%w" info:)"
+HEIGHT="$(convert "$1" -format "%h" info:)"
+MINEQSIZE=$(($WIDTH<=$HEIGHT?$WIDTH:$HEIGHT))
+case "$2" in
+	18)
+    if [ "$MINEQSIZE" -lt 72 ]; then
+		  echo "Requires at least 72px"; exit 1
+    fi
+		;;
+	24)
+    if [ "$MINEQSIZE" -lt 96 ]; then
+		  echo "Requires at least 96px"; exit 1
+    fi  
+		;;
+	36)
+    if [ "$MINEQSIZE" -lt 144 ]; then
+		  echo "Requires at least 144px"; exit 1
+    fi  
+		;;
+	48)
+    if [ "$MINEQSIZE" -lt 192 ]; then
+		  echo "Requires at least 192px"; exit 1
+    fi  
+		;;        
+	*)
+		echo "Only sizes of 18, 24, 36 and 48 dp/pt are supported!"; exit 1
+		;; 
+esac
+
+DIRNAME="$(dirname "${1}")"  
+FILENAME="$(basename "${1%.*}")"
+EXTENSION="${1##*.}"
+
+DIRIOS="iOS/"$FILENAME".imageset"
+mkdir -p -m 755 "${1%/*}/$DIRIOS"
+rszmvios() {
+  resize "$1" "$2"
+  mv "${1%.*}_resize.${1##*.}" "$DIRNAME/$DIRIOS/$FILENAME$3.$EXTENSION"
+}
+
+mkdir -p -m 755 "${1%/*}"/android/{drawable-xxxhdpi,drawable-xxhdpi,drawable-xhdpi,drawable-hdpi,drawable-mdpi}
+rszmvandroid() {
+  resize "$1" "$2"
+  mv "${1%.*}_resize.${1##*.}" "$DIRNAME/android/$3/$FILENAME.$EXTENSION"
+}
+
+if [ "$2" -eq 18 ]; then
+  # Android
+  rszmvandroid "$1" 72 drawable-xxxhdpi
+  rszmvandroid "$1" 54 drawable-xxhdpi
+  rszmvandroid "$1" 36 drawable-xhdpi
+  rszmvandroid "$1" 27 drawable-hdpi
+  rszmvandroid "$1" 18 drawable-mdpi
+  # iOS
+  rszmvios "$1" 54 @3x
+  rszmvios "$1" 36 @2x
+  rszmvios "$1" 18
+elif [ "$2" -eq 24 ]; then
+  # Android
+  rszmvandroid "$1" 96 drawable-xxxhdpi
+  rszmvandroid "$1" 72 drawable-xxhdpi
+  rszmvandroid "$1" 48 drawable-xhdpi
+  rszmvandroid "$1" 36 drawable-hdpi
+  rszmvandroid "$1" 24 drawable-mdpi
+  # iOS
+  rszmvios "$1" 72 @3x
+  rszmvios "$1" 48 @2x
+  rszmvios "$1" 24
+elif [ "$2" -eq 36 ]; then
+  # Android
+  rszmvandroid "$1" 144 drawable-xxxhdpi
+  rszmvandroid "$1" 108 drawable-xxhdpi
+  rszmvandroid "$1" 72 drawable-xhdpi
+  rszmvandroid "$1" 54 drawable-hdpi
+  rszmvandroid "$1" 36 drawable-mdpi
+  # iOS
+  rszmvios "$1" 108 @3x
+  rszmvios "$1" 72 @2x
+  rszmvios "$1" 36
+elif [ "$2" -eq 48 ]; then
+  # Android
+  rszmvandroid "$1" 192 drawable-xxxhdpi
+  rszmvandroid "$1" 144 drawable-xxhdpi
+  rszmvandroid "$1" 96 drawable-xhdpi
+  rszmvandroid "$1" 72 drawable-hdpi
+  rszmvandroid "$1" 48 drawable-mdpi
+  # iOS
+  rszmvios "$1" 144 @3x
+  rszmvios "$1" 96 @2x
+  rszmvios "$1" 48
+fi
+)
+
 # http://www.fmwconcepts.com/imagemagick/dominantcolor/index.php
 dominantcolor() {
 dominantcolor=`convert $1 \
