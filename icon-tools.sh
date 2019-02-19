@@ -51,6 +51,36 @@ rszmvios() {
   mv "${1%.*}_resize.${1##*.}" "$DIRNAME/$DIRIOS/$FILENAME$3.$EXTENSION"
 }
 
+contentsjson() {
+contents="{\
+  \"images\": [
+    {
+      \"idiom\": \"universal\"
+    },
+    {
+      \"filename\": \""$FILENAME".png\",
+      \"scale\": \"1x\",
+      \"idiom\": \"universal\"
+    },
+    {
+      \"filename\": \""$FILENAME"@2x.png\",
+      \"scale\": \"2x\",
+      \"idiom\": \"universal\"
+    },
+    {
+      \"filename\": \""$FILENAME"@3x.png\",
+      \"scale\": \"3x\",
+      \"idiom\": \"universal\"
+    }
+  ],
+  \"info\": {
+    \"version\": 1,
+    \"author\": \"xcode\"
+  }
+}"
+echo "$contents" >"$DIRNAME/$DIRIOS/Contents.json"
+}
+
 mkdir -p -m 755 "${1%/*}"/android/{drawable-xxxhdpi,drawable-xxhdpi,drawable-xhdpi,drawable-hdpi,drawable-mdpi}
 rszmvandroid() {
   resize "$1" "$2"
@@ -68,6 +98,7 @@ if [ "$2" -eq 18 ]; then
   rszmvios "$1" 54 @3x
   rszmvios "$1" 36 @2x
   rszmvios "$1" 18
+  contentsjson
 elif [ "$2" -eq 24 ]; then
   # Android
   rszmvandroid "$1" 96 drawable-xxxhdpi
@@ -79,6 +110,7 @@ elif [ "$2" -eq 24 ]; then
   rszmvios "$1" 72 @3x
   rszmvios "$1" 48 @2x
   rszmvios "$1" 24
+  contentsjson
 elif [ "$2" -eq 36 ]; then
   # Android
   rszmvandroid "$1" 144 drawable-xxxhdpi
@@ -90,6 +122,7 @@ elif [ "$2" -eq 36 ]; then
   rszmvios "$1" 108 @3x
   rszmvios "$1" 72 @2x
   rszmvios "$1" 36
+  contentsjson
 elif [ "$2" -eq 48 ]; then
   # Android
   rszmvandroid "$1" 192 drawable-xxxhdpi
@@ -101,6 +134,7 @@ elif [ "$2" -eq 48 ]; then
   rszmvios "$1" 144 @3x
   rszmvios "$1" 96 @2x
   rszmvios "$1" 48
+  contentsjson
 fi
 )
 
