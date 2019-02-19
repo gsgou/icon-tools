@@ -147,6 +147,16 @@ mv "$TEMP_DIR/${1##*/}" "${1%.*}_${FUNCNAME[0]}.${1##*.}"
 rm -rf "$TEMP_DIR"
 }
 
+# http://www.imagemagick.org/Usage/thumbnails/#pad
+square() {
+convert "$1" \
+\( +clone -rotate 90 +clone -mosaic +level-colors "$2" \) \
++swap \
+-gravity center \
+-composite \
+"${1%.*}_${FUNCNAME[0]}.${1##*.}"   
+}
+
 trim() {
 convert "$1" \
 -trim \

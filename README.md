@@ -12,6 +12,7 @@ $ icon-tools.sh colorize $FILE "#FF0000FF"
 $ icon-tools.sh createicons $FILE 48
 $ icon-tools.sh dominantcolor $FILE
 $ icon-tools.sh resize $FILE 24
+$ icon-tools.sh square $FILE transparent
 $ icon-tools.sh trim $FILE
 ```
 ## Dependencies
