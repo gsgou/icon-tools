@@ -9,6 +9,7 @@ convert "$1" \
 "${1%.*}_${FUNCNAME[0]}.${1##*.}"
 }
 
+# https://google.github.io/material-design-icons/#sizing
 # Tab-Icons 24dp/pt: https://material.io/design/components/tabs.html#spec
 createicons() (
 WIDTH="$(convert "$1" -format "%w" info:)"
@@ -34,9 +35,14 @@ case "$2" in
     if [ "$MINEQSIZE" -lt 192 ]; then
 		  echo "Requires at least 192px"; exit 1
     fi  
-		;;        
+		;;
+  96)
+    if [ "$MINEQSIZE" -lt 384 ]; then
+		  echo "Requires at least 384px"; exit 1
+    fi  
+		;;   
 	*)
-		echo "Only sizes of 18, 24, 36 and 48 dp/pt are supported!"; exit 1
+		echo "Only sizes of 18, 24, 36, 48 and 96 dp/pt are supported!"; exit 1
 		;; 
 esac
 
@@ -134,6 +140,18 @@ elif [ "$2" -eq 48 ]; then
   rszmvios "$1" 144 @3x
   rszmvios "$1" 96 @2x
   rszmvios "$1" 48
+  contentsjson
+elif [ "$2" -eq 96 ]; then
+  # Android
+  rszmvandroid "$1" 384 drawable-xxxhdpi
+  rszmvandroid "$1" 288 drawable-xxhdpi
+  rszmvandroid "$1" 192 drawable-xhdpi
+  rszmvandroid "$1" 144 drawable-hdpi
+  rszmvandroid "$1" 96 drawable-mdpi
+  # iOS
+  rszmvios "$1" 288 @3x
+  rszmvios "$1" 192 @2x
+  rszmvios "$1" 96
   contentsjson
 fi
 )
