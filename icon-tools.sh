@@ -10,7 +10,9 @@ convert "$1" \
 }
 
 # https://google.github.io/material-design-icons/#sizing
-# Tab-Icons 24dp/pt: https://material.io/design/components/tabs.html#spec
+# Tab-Icons 24dp/pt:
+# https://material.io/design/components/tabs.html#spec
+# https://developer.apple.com/design/human-interface-guidelines/ios/icons-and-images/custom-icons/#tab-bar-icon-size
 createicons() (
 WIDTH="$(convert "$1" -format "%w" info:)"
 HEIGHT="$(convert "$1" -format "%h" info:)"
