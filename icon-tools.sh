@@ -25,9 +25,9 @@ MINEQSIZE=$(($WIDTH<=$HEIGHT?$WIDTH:$HEIGHT))
 MDPI="$(round $2 0)"
 FLOAT_HDPI="$(echo "$MDPI * 1.5" | bc -l)"
 HDPI="${FLOAT_HDPI%.*}"
-XHDPI=$(expr $MDPI \* 2)
-XXHDPI=$(expr $MDPI \* 3)
-XXXHDPI=$(expr $MDPI \* 4)
+XHDPI="$(($MDPI * 2))"
+XXHDPI="$(($MDPI * 3))"
+XXXHDPI="$(($MDPI * 4))"
 
 if [ "$MINEQSIZE" -lt "$XXXHDPI" ]; then
   echo "Requires at least "$XXXHDPI"px"; exit 1
