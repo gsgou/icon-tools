@@ -30,7 +30,7 @@ XXHDPI="$(($MDPI * 3))"
 XXXHDPI="$(($MDPI * 4))"
 
 if [ "$MINEQSIZE" -lt "$XXXHDPI" ]; then
-  echo "Requires at least "$XXXHDPI"px"; exit 1
+  echo "Requires at least $XXXHDPI px"; exit 1
 fi
 
 DIRNAME="$(dirname "${1}")"  
