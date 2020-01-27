@@ -2,7 +2,8 @@
 
 Bash script to ***process icons*** for mobile-development use cases.
 
-Uses imagemagick (`convert`) (`mogrify`) to manipulate the image input.
+Uses [ImageMagick](https://github.com/ImageMagick/ImageMagick) (`convert`) (`mogrify`) to manipulate the image input
+and [CairoSVG](https://github.com/Kozea/CairoSVG) to convert SVG files to PDF and PNG.
   
 ## Example Runs
 
