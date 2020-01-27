@@ -18,6 +18,11 @@ convert "$1" \
 # https://material.io/design/components/tabs.html#spec
 # https://developer.apple.com/design/human-interface-guidelines/ios/icons-and-images/custom-icons/#tab-bar-icon-size
 createicons() (
+# Check if width-parameter is given else state an error and exit
+if [ -z "$2" ]; then
+  echo 'Script usage: ./icon-tools.sh createicons $FILE width';
+  exit 1;
+fi
 MDPI="$(round $2 0)"
 FLOAT_HDPI="$(echo "$MDPI * 1.5" | bc -l)"
 HDPI="${FLOAT_HDPI%.*}"
