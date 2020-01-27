@@ -19,15 +19,9 @@ $ icon-tools.sh trim $FILE
 
 The script uses `basename`,`dirname`,`grep`,`head`,`mkdir`,`mv`,`rm`,`sed`,`sort`,`convert` and `mogrify`.
 
-##### apt-get
-```
-sudo apt-get install imagemagick
-```
-##### yum
-```
-sudo yum install imagemagick
-```
 ##### homebrew MacOS
 ```
 brew install imagemagick --build-from-source
+brew install cairo libffi python3
+pip3 install cairosvg
 ```

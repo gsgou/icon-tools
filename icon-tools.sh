@@ -18,10 +18,6 @@ convert "$1" \
 # https://material.io/design/components/tabs.html#spec
 # https://developer.apple.com/design/human-interface-guidelines/ios/icons-and-images/custom-icons/#tab-bar-icon-size
 createicons() (
-WIDTH="$(convert "$1" -format "%w" info:)"
-HEIGHT="$(convert "$1" -format "%h" info:)"
-MINEQSIZE=$(($WIDTH<=$HEIGHT?$WIDTH:$HEIGHT))
-
 MDPI="$(round $2 0)"
 FLOAT_HDPI="$(echo "$MDPI * 1.5" | bc -l)"
 HDPI="${FLOAT_HDPI%.*}"
@@ -29,16 +25,6 @@ XHDPI="$(($MDPI * 2))"
 XXHDPI="$(($MDPI * 3))"
 XXXHDPI="$(($MDPI * 4))"
 
-if [ "$MINEQSIZE" -lt "$XXXHDPI" ]; then
-  echo "Requires at least $XXXHDPI px"; exit 1
-fi
-
-DIRNAME="$(dirname "${1}")"  
-FILENAME="$(basename "${1%.*}")"
-EXTENSION="${1##*.}"
-
-DIRIOS="iOS/"$FILENAME".imageset"
-mkdir -p -m 755 "${1%/*}/$DIRIOS"
 rszmvios() {
   resize "$1" "$2"
   mv "${1%.*}_resize.${1##*.}" "$DIRNAME/$DIRIOS/$FILENAME$3.$EXTENSION"
@@ -74,12 +60,24 @@ contents="{\
 echo "$contents" >"$DIRNAME/$DIRIOS/Contents.json"
 }
 
-mkdir -p -m 755 "${1%/*}"/android/{drawable-xxxhdpi,drawable-xxhdpi,drawable-xhdpi,drawable-hdpi,drawable-mdpi}
 rszmvandroid() {
   resize "$1" "$2"
   mv "${1%.*}_resize.${1##*.}" "$DIRNAME/android/$3/$FILENAME.$EXTENSION"
 }
 
+create_icons_directories() {
+DIRNAME="$(dirname "${1}")"  
+FILENAME="$(basename "${1%.*}")"
+EXTENSION="${1##*.}"
+# Create Android directory
+mkdir -p -m 755 "${1%/*}"/android/{drawable-xxxhdpi,drawable-xxhdpi,drawable-xhdpi,drawable-hdpi,drawable-mdpi}
+# Create iOS directory
+DIRIOS="iOS/"$FILENAME".imageset"
+mkdir -p -m 755 "${1%/*}/$DIRIOS"
+}
+
+create_png_icons_from_png() {
+create_icons_directories "$1"
 # Android
 rszmvandroid "$1" "$XXXHDPI" drawable-xxxhdpi
 rszmvandroid "$1" "$XXHDPI" drawable-xxhdpi
@@ -91,6 +89,35 @@ rszmvios "$1" "$XXHDPI" @3x
 rszmvios "$1" "$XHDPI" @2x
 rszmvios "$1" "$MDPI"
 contentsjson
+}
+
+create_png_icons() {
+WIDTH="$(convert "$1" -format "%w" info:)"
+HEIGHT="$(convert "$1" -format "%h" info:)"
+MINEQSIZE=$(($WIDTH<=$HEIGHT?$WIDTH:$HEIGHT))
+shopt -s nocasematch
+case ${1: -4} in
+ 	".png")
+    if [ "$MINEQSIZE" -lt "$XXXHDPI" ]; then
+      echo "Requires at least $XXXHDPI px"; exit 1
+    fi
+    create_png_icons_from_png "$1"
+		;;
+  ".svg")
+    SCALE="$(echo "$XXXHDPI / $MINEQSIZE" | bc -l)"
+    PNG_FILE=${1%.*}.png
+    cairosvg "$1" -s "$SCALE" -o "$PNG_FILE"
+    create_png_icons_from_png "$PNG_FILE"
+    rm -f "$PNG_FILE"
+		;;
+  *)
+		echo "Only png and svg formats are supported!"; exit 1
+		;; 
+esac
+shopt -u nocasematch
+}
+
+create_png_icons "$1"
 )
 
 # http://www.fmwconcepts.com/imagemagick/dominantcolor/index.php
