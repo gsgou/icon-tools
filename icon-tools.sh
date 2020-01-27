@@ -17,12 +17,16 @@ convert "$1" \
 # Tab-Icons 24dp/pt:
 # https://material.io/design/components/tabs.html#spec
 # https://developer.apple.com/design/human-interface-guidelines/ios/icons-and-images/custom-icons/#tab-bar-icon-size
-createicons() (
+createicons() {
 # Check if width-parameter is given else state an error and exit
 if [ -z "$2" ]; then
   echo 'Script usage: ./icon-tools.sh createicons $FILE width';
   exit 1;
 fi
+
+DIRNAME="$(dirname "${1}")"
+FILENAME="$(basename "${1%.*}")"
+
 MDPI="$(round $2 0)"
 FLOAT_HDPI="$(echo "$MDPI * 1.5" | bc -l)"
 HDPI="${FLOAT_HDPI%.*}"
@@ -32,11 +36,12 @@ XXXHDPI="$(($MDPI * 4))"
 
 rszmvios() {
   resize "$1" "$2"
-  mv "${1%.*}_resize.${1##*.}" "$DIRNAME/$DIRIOS/$FILENAME$3.$EXTENSION"
+  mv "${1%.*}_resize.${1##*.}" "$DIRNAME/$DIRIOS/$FILENAME$3.png"
 }
 
-contentsjson() {
+contentsjsonforpng() {
 contents="{\
+
   \"images\": [
     {
       \"idiom\": \"universal\"
@@ -67,13 +72,10 @@ echo "$contents" >"$DIRNAME/$DIRIOS/Contents.json"
 
 rszmvandroid() {
   resize "$1" "$2"
-  mv "${1%.*}_resize.${1##*.}" "$DIRNAME/android/$3/$FILENAME.$EXTENSION"
+  mv "${1%.*}_resize.${1##*.}" "$DIRNAME/android/$3/$FILENAME.png"
 }
 
 create_icons_directories() {
-DIRNAME="$(dirname "${1}")"  
-FILENAME="$(basename "${1%.*}")"
-EXTENSION="${1##*.}"
 # Create Android directory
 mkdir -p -m 755 "${1%/*}"/android/{drawable-xxxhdpi,drawable-xxhdpi,drawable-xhdpi,drawable-hdpi,drawable-mdpi}
 # Create iOS directory
@@ -93,7 +95,7 @@ rszmvandroid "$1" "$MDPI" drawable-mdpi
 rszmvios "$1" "$XXHDPI" @3x
 rszmvios "$1" "$XHDPI" @2x
 rszmvios "$1" "$MDPI"
-contentsjson
+contentsjsonforpng
 }
 
 create_png_icons() {
@@ -123,7 +125,46 @@ shopt -u nocasematch
 }
 
 create_png_icons "$1"
-)
+}
+
+createvectoricons() {
+contentsjsonforpdf() {
+contents="{\
+
+  \"images\": [
+    {
+      \"idiom\": \"universal\",
+      \"filename\": \""$FILENAME".pdf\"
+    }
+  ],
+  \"info\": {
+    \"version\": 1,
+    \"author\": \"xcode\"
+  },
+  \"properties\": {
+    \"preserves-vector-representation\":true
+  }
+}"
+echo "$contents" >"$DIRNAME/$DIRIOS/Contents.json"
+}
+shopt -s nocasematch
+case ${1: -4} in
+  ".svg")
+    PDF_FILE=${1%.*}.pdf
+    cairosvg "$1" -o "$PDF_FILE"
+    DIRNAME="$(dirname "${1}")"
+    FILENAME="$(basename "${1%.*}")"
+    DIRIOS="iOS/"$FILENAME".imageset"
+    mkdir -p -m 755 "${1%/*}/$DIRIOS"
+    mv "$PDF_FILE" "$DIRNAME/$DIRIOS/$FILENAME.pdf"
+    contentsjsonforpdf
+		;;
+  *)
+		echo "Only svg formats are supported!"; exit 1
+		;;
+esac
+shopt -u nocasematch
+}
 
 # http://www.fmwconcepts.com/imagemagick/dominantcolor/index.php
 dominantcolor() {
