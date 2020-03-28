@@ -19,7 +19,7 @@ $ ./icon-tools.sh trim $FILE
 ```
 ## Dependencies
 
-The script uses `basename`,`dirname`,`grep`,`head`,`mkdir`,`mv`,`rm`,`sed`,`sort`,`convert,`mogrify` and `cairosvg`.
+The script uses `basename`,`dirname`,`grep`,`head`,`mkdir`,`mv`,`rm`,`sed`,`sort`,`convert`,`mogrify` and `cairosvg`.
 
 ##### homebrew MacOS
 ```
