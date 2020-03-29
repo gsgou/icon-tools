@@ -27,3 +27,8 @@ brew install imagemagick --build-from-source
 brew install cairo libffi python3
 pip3 install cairosvg
 ```
+
+## Contributors
+
+Big thanks to our contributors:
+* [Abdull](https://github.com/Abdull)
